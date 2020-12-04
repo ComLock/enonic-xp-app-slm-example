@@ -1,0 +1,86 @@
+:toc:
+:toc-placement!:
+
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+endif::[]
+
+= How to setup slm to render a page
+
+This application contains code examples of how to render a page using slm.
+
+toc::[]
+
+== How did I do it?
+
+====== Setup project
+1. I started by cloning starter-babel, because I like es6.
+1. Then I upgraded to Enonic XP 6.12.1.
+1. Then I had to upgrade gradle to 4.0 in order to build.
+
+====== Add slm library
+[source, console]
+----
+yarn add slm
+----
+Then I made sure the build system copies the slm node_module files into /build/resources/main/lib
+
+====== Example slm template
+[source, js]
+----
+doctype html
+html
+  head
+    meta charset="UTF-8"
+    title = this.title
+    meta name="viewport" content="width=device-width, initial-scale=1"
+  body data-portal-component-type="page"
+    h1 = this.title
+    p This page is rendered from a slm template
+    p = this.requestString
+    - if this.regions
+        - if this.regions.main
+            main data-portal-region='main'
+              - this.regions.main.components.forEach(function(component))
+                == component.utext
+----
+
+====== Render slm template
+
+[source, js]
+----
+import { render } from 'slm/lib/slm_browser'; <1>
+import { getResource, readText } from '/lib/xp/io'; <2>
+
+function readFile(file) { <3>
+    return readText(getResource(file).getStream());
+}
+
+const VIEW_FILE = resolve('view.slm'); <4>
+const VIEW_TEXT = readFile(VIEW_FILE); <5>
+
+
+export function get(request) {
+    const model = { <6>
+        title: 'Title from js variable in controller',
+        requestString: JSON.stringify(request, null, 4)
+    };
+    return {
+        body: render(VIEW_TEXT, model, { filename: VIEW_FILE }), <7>
+        contentType: 'text/html'
+    };
+} // function get
+----
+<1> Import the render function from the slm library.
+<2> Import functions from the io library, needed to read text from a file.
+<3> A function to read text from a file.
+<4> Which slm template file to use.
+<5> Read the slm template file into a string.
+<6> Some variables to show the template is not hardcoded.
+<7> Render using the template and the model.
+
+IMPORTANT: The render function also need to know where the view file is.

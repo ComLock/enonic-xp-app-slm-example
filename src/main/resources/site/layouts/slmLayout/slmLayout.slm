@@ -1,0 +1,5 @@
+- if this.regions
+    - if this.regions.middle
+        div data-portal-region='middle'
+          - this.regions.middle.components.forEach(function(component))
+            == component.utext

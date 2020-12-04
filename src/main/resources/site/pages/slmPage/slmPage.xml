@@ -1,0 +1,12 @@
+<page>
+    <display-name>Slm page</display-name>
+    <config>
+        <input name="title" type="TextLine">
+            <label>Title</label>
+            <occurrences minimum="0" maximum="1"/>
+        </input>
+    </config>
+    <regions>
+        <region name="main"/>
+    </regions>
+</page>

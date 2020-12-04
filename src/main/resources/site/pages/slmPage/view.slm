@@ -1,0 +1,15 @@
+doctype html
+html
+  head
+    meta charset="UTF-8"
+    title = this.title
+    meta name="viewport" content="width=device-width, initial-scale=1"
+  body data-portal-component-type="page"
+    h1 = this.title
+    p This page is rendered from a slm template
+    p = this.requestString
+    - if this.regions
+        - if this.regions.main
+            main data-portal-region='main'
+              - this.regions.main.components.forEach(function(component))
+                == component.utext

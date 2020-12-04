@@ -1,0 +1,7 @@
+<layout>
+    <display-name>Slm layout</display-name>
+    <config/>
+    <regions>
+        <region name="middle"/>
+    </regions>
+</layout>
